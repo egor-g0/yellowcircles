@@ -6,15 +6,25 @@ from PyQt6.QtWidgets import QApplication, QMainWindow
 from PyQt6.QtGui import QPainter, QColor
 from PyQt6.QtCore import QPoint
 from PyQt6.QtWidgets import QWidget, QApplication
+from ui import Ui_MainWindow
 
 
-class MyWidget(QMainWindow):
+class MyWidget(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('01.ui', self)  # Загружаем дизайн
+        self.setupUi(self)
         self.circles = []
         self.pushButton.clicked.connect(self.add)
-        # Обратите внимание: имя элемента такое же как в QTDesigner
+
+    def add(self):
+        r = randint(10, 50)
+        x = randint(50, 550)
+        y = randint(50, 550)
+        rr = randint(0, 255)
+        gg = randint(0, 255)
+        bb = randint(0, 255)
+        self.circles.append((x, y, r, rr, gg, bb))
+        self.update()
 
     def paintEvent(self, event):
         qp = QPainter()
@@ -23,17 +33,13 @@ class MyWidget(QMainWindow):
         qp.end()
 
     def draw_circles(self, qp):
-        qp.setBrush(QColor(255, 255, 0))
-        for circle in self.circles:
-            x, y, r = circle
+
+        for x, y, r, rr, gg, bb in self.circles:
+            qp.setBrush(QColor(rr, gg, bb))
             qp.drawEllipse(QPoint(x, y), r, r)
 
 
-    def add(self):
-        r = randint(10, 50)
-        x = randint(50, 550)
-        y = randint(50, 550)
-        self.circles.append((x, y, r))
+
 
 
 
